@@ -8,31 +8,27 @@ import 'package:flutter/widgets.dart' ;
 import 'Services.dart';
 import 'package:http/http.dart' as http;
 void main() => runApp(
-    MaterialApp(
+
+MaterialApp(
         debugShowCheckedModeBanner: false,
       home:HomePage(),
       )
-    );
+
+);
   class HomePage extends StatefulWidget{
   @override
   HomePageState createState()=>HomePageState();
 }
 
   class HomePageState extends State<HomePage> {
-    late List<Product>_products;
-    late bool _loading;
-    @override
-    void iniState(){
-      super.initState();
-      _loading=true;
-     Services.getProduct().then((products) {
-       setState(() {
-         _products =products;
-         _loading=false;
-       });
+     List<Product> products=[];
 
-     });
-    }
+   @override
+   void iniState()async{
+     super.initState();
+     List<Product> _products=await(Services.getProduct());
+
+   }
     @override
     Widget build(BuildContext context) {
 
@@ -47,7 +43,8 @@ void main() => runApp(
               Icons.menu,
               color: Colors.black87,
             ),
-            onPressed: () {},
+            onPressed:(){} ,
+
           ),
         ),
         body: SafeArea(
@@ -123,16 +120,17 @@ void main() => runApp(
                       ),
                       Container(
                         height: 200,
-                        child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: null==_products ? 0:_products.length,
+
+                      child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                            itemCount: null==products ? 0:products.length,
                             itemBuilder :(BuildContext context,int index) {
-                              Product prod =_products[index];
+                              Product prod =products[index];
                               return Card(
                                 child: Row(
-                                children: <Widget>[
-                               ProductCard(prod.pathImage,prod.price,prod.titer,),
-                                ],
+                                  children: <Widget>[
+                                    ProductCard(prod.pathImage,prod.price,prod.titer,),
+                                  ],
                                 ),
                               );
                             }
@@ -219,7 +217,6 @@ void main() => runApp(
         ),
       );
     }
-
 
 
 
